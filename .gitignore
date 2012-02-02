@@ -1,0 +1,16 @@
+# OS X
+.DS_Store
+.ponyrc
+
+# python
+*.py[co]
+
+# gettext
+*.mo
+
+# pycharm
+/.idea
+/projectFilesBackup/
+
+# tmp files
+/tmp
