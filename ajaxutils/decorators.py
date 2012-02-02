@@ -1,3 +1,7 @@
+"""
+syntactic sugar for Ajax requests in django
+"""
+
 from decorator import decorator
 
 try:
@@ -8,7 +12,6 @@ except ImportError:
 from django.http import HttpResponse
 
 
-
 class JsonResponse(HttpResponse):
     """
     HttpResponse descendant, which return response with ``application/json`` mimetype.
@@ -16,7 +19,6 @@ class JsonResponse(HttpResponse):
     def __init__(self, data):
         super(JsonResponse, self).__init__(content=json.dumps(data),
                                            mimetype='application/json')
-
 
 
 def ajax(login_required=False, require_GET=False, require_POST=False):
