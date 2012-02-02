@@ -1,0 +1,43 @@
+<div style="float:right">!http://www.mylittledjango.com/media/pony_parts/pony.png(AJAX requests for Ponies™)!</div>
+
+How many times you found yourself writing some views in Django to handle an AJAX request? And how many times you just copy-pasted a view written for synchronous requests to return a JSON object? And so, how many times you forgot that that <code>@login_required</code> will actually redirect the request to the login page? If this happened to you as many times as it happened to us, you may be start considering using django-ajaxutils.
+
+Django-ajaxutils allows you to define a view as an AJAX view that will return a JSON object and that will handle correctly errors such as user not authenticated and invalid requests. Everything through a simple decorator!
+
+h2. Usage
+
+If you want to define a view for handling an AJAX request, you have just to decorate it with @ajax and return a dictionary representing the object to be returned as JSON. Something like this:
+
+<pre><code lang="python">@ajax()
+def check_for_some_task(request):
+    exit_status = get_status_of_some_task()
+    if exit_status is None:
+        return {
+            'status': 'pending'
+        }
+
+    return {
+        'status': 'completed',
+        'exit_status': exit_status
+    } 
+</code></pre>
+
+
+h3. Requiring authentication
+
+If your view requires the user to be authenticated, just write it!
+
+<pre><code>@ajax(login_required=True)
+def some_very_private_view(request):
+    data = perform_something_private()
+    return {
+        'data': data
+    }
+</code></pre>
+
+In case of an unauthenticated request, a 401 response containing the following JSON object will be returned:
+
+<pre><code>{
+    'status': 'error',
+    'error': 'Unauthorized',
+}</code></pre>
