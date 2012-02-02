@@ -16,9 +16,11 @@ class JsonResponse(HttpResponse):
     """
     HttpResponse descendant, which return response with ``application/json`` mimetype.
     """
-    def __init__(self, data):
-        super(JsonResponse, self).__init__(content=json.dumps(data),
-                                           mimetype='application/json')
+    def __init__(self, data, status=200):
+        super(JsonResponse, self).__init__(
+            content=json.dumps(data),
+            mimetype='application/json', status=status
+        )
 
 
 def ajax(login_required=False, require_GET=False, require_POST=False):
@@ -35,20 +37,20 @@ def ajax(login_required=False, require_GET=False, require_POST=False):
             if not request.user.is_authenticated():
                 return JsonResponse({
                     'status': 'error',
-                    'error': 'Not authenticated',
-                })
+                    'error': 'Unauthorized',
+                }, status=401)
         if require_GET:
             if request.method != 'GET':
                 return JsonResponse({
                     'status': 'error',
                     'error': 'Method not allowed',
-                })
+                }, status=405)
         if require_POST:
             if request.method != 'POST':
                 return JsonResponse({
                     'status': 'error',
                     'error': 'Method not allowed',
-                })
+                }, status=405)
 
         response = f(request, *args, **kwargs)
 
