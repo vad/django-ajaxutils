@@ -7,11 +7,12 @@ except ImportError:
 
 install_requires = [
     'Django',
+    'decorator>=3.3.2',
 ]
 
 tests_require = [
     'django-jenkins>=0.11.0',
-    'pep8==0.6.1',
+    'pep8>=0.6.1',
 ]
 
 setup(
