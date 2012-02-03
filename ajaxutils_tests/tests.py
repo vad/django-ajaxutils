@@ -15,24 +15,36 @@ class TestAjaxDecorator(TestCase):
         json.loads(response.content)
 
     def test_simple_get_success(self):
+        response = self.client.get('/simple_bool_get/')
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.get('/simple_get/')
         self.assertEqual(response.status_code, 200)
 
         json.loads(response.content)
 
     def test_simple_get_failure(self):
+        response = self.client.post('/simple_bool_get/')
+        self.assertEqual(response.status_code, 405)
+
         response = self.client.post('/simple_get/')
         self.assertEqual(response.status_code, 405)
 
         json.loads(response.content)
 
     def test_simple_post_success(self):
+        response = self.client.post('/simple_bool_post/')
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.post('/simple_post/')
         self.assertEqual(response.status_code, 200)
 
         json.loads(response.content)
 
     def test_simple_post_failure(self):
+        response = self.client.get('/simple_bool_post/')
+        self.assertEqual(response.status_code, 405)
+
         response = self.client.get('/simple_post/')
         self.assertEqual(response.status_code, 405)
 

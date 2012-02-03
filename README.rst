@@ -16,6 +16,9 @@ Usage
 
 If you want to define a view for handling an AJAX request, you have just to decorate it with ``@ajax`` and return a dictionary representing the object to be returned as JSON. If you lack of imagination, check this out::
 
+    from ajaxutils.decorators import ajax
+
+
     @ajax()
     def check_for_some_task(request):
         exit_status = get_status_of_some_task()
@@ -23,11 +26,11 @@ If you want to define a view for handling an AJAX request, you have just to deco
             return {
                 'status': 'pending'
             }
-    
+
         return {
             'status': 'completed',
             'exit_status': exit_status
-        } 
+        }
 
 
 Requiring authentication

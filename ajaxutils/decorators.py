@@ -23,7 +23,8 @@ class JsonResponse(HttpResponse):
         )
 
 
-def ajax(login_required=False, require_GET=False, require_POST=False):
+def ajax(login_required=False, require_GET=False, require_POST=False,
+         require=None):
     """
     Usage:
 
@@ -39,13 +40,13 @@ def ajax(login_required=False, require_GET=False, require_POST=False):
                     'status': 'error',
                     'error': 'Unauthorized',
                 }, status=401)
-        if require_GET:
+        if require_GET or require == 'GET':
             if request.method != 'GET':
                 return JsonResponse({
                     'status': 'error',
                     'error': 'Method not allowed',
                 }, status=405)
-        if require_POST:
+        if require_POST or require == 'POST':
             if request.method != 'POST':
                 return JsonResponse({
                     'status': 'error',
