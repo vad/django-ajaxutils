@@ -15,9 +15,11 @@ tests_require = [
     'pep8>=0.6.1',
 ]
 
+long_description = open('README.rst').read()
+
 setup(
     name='django-ajaxutils',
-    version="0.1.0",
+    version="0.1.1",
     description='Ajax requests for Ponies',
     url='http://github.com/ahref/django-ajaxutils',
     packages=['ajaxutils'],
@@ -31,6 +33,7 @@ setup(
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',
                    'Topic :: Utilities'],
+    long_description=long_description,
     install_requires=install_requires,
     tests_require=tests_require,
     extras_require={'test': tests_require},
