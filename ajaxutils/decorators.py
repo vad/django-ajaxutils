@@ -40,18 +40,20 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
                     'status': 'error',
                     'error': 'Unauthorized',
                 }, status=401)
-        if require_GET or require == 'GET':
-            if request.method != 'GET':
-                return JsonResponse({
-                    'status': 'error',
-                    'error': 'Method not allowed',
-                }, status=405)
-        if require_POST or require == 'POST':
-            if request.method != 'POST':
-                return JsonResponse({
-                    'status': 'error',
-                    'error': 'Method not allowed',
-                }, status=405)
+
+        # check request method
+        method = None
+        if require_GET:
+            method = "GET"
+        if require_POST:
+            method = "POST"
+        if require:
+            method = require
+        if method and method != request.method:
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Method not allowed',
+            }, status=405)
 
         response = f(request, *args, **kwargs)
 
