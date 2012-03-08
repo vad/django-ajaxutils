@@ -10,7 +10,7 @@ env:
 install: python setup.py develop
 
 #script: python setup.py test
-script: django-admin.py test ajaxutils_tests --settings=settings
+script: django-admin.py test ajaxutils_tests --settings=ajaxutils_tests.settings
 
 notifications:
   irc:
