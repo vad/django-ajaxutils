@@ -9,7 +9,11 @@ Django-ajaxutils allows you to define a view as an AJAX view that will return a 
 Installation
 ============
 
-Come on, you know how to do it. (soon on PyPi!)
+Just go for::
+
+    pip install django-ajaxutils
+
+to do the magic.
 
 Usage
 =====
