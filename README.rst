@@ -6,6 +6,8 @@ How many times you found yourself writing some views in Django to handle an AJAX
 
 Django-ajaxutils allows you to define a view as an AJAX view that will return a JSON object and that will handle correctly errors such as user not authenticated and invalid requests. Everything through a simple decorator!
 
+.. image:: https://secure.travis-ci.org/ahref/django-ajaxutils.png?branch=master
+
 Installation
 ============
 
