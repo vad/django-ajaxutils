@@ -16,10 +16,11 @@ class JsonResponse(HttpResponse):
     """
     HttpResponse descendant, which return response with ``application/json`` mimetype.
     """
-    def __init__(self, data, status=200):
+    def __init__(self, data, mimetype='application/json', status=200):
         super(JsonResponse, self).__init__(
             content=json.dumps(data),
-            mimetype='application/json', status=status
+            mimetype=mimetype,
+            status=status
         )
 
 

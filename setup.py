@@ -6,7 +6,7 @@ except ImportError:
     from setuptools import setup, find_packages
 
 install_requires = [
-    'Django',
+    'Django>=1.2',
     'decorator>=3.3.2',
 ]
 
