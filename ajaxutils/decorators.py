@@ -58,9 +58,7 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
 
         response = f(request, *args, **kwargs)
 
-        if isinstance(response, dict):
-            return JsonResponse(response)
-        else:
-            return response
+        return JsonResponse(response)
+
 
     return decorator(ajax)
