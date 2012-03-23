@@ -4,26 +4,9 @@ syntactic sugar for Ajax requests in django
 
 from decorator import decorator
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
+from django.http import Http404
 
-from django.http import HttpResponse
-
-
-class JsonResponse(HttpResponse):
-    """
-    HttpResponse descendant, which return response with
-    ``application/json`` mimetype.
-    """
-
-    def __init__(self, data, mimetype='application/json', status=200):
-        super(JsonResponse, self).__init__(
-            content=json.dumps(data),
-            mimetype=mimetype,
-            status=status
-        )
+from .http import JsonResponse
 
 
 def ajax(login_required=False, require_GET=False, require_POST=False,
@@ -59,6 +42,28 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
                 'error': 'Method not allowed',
                 }, status=405)
 
-        return JsonResponse(f(request, *args, **kwargs))
+        try:
+            response = f(request, *args, **kwargs)
+        except Http404:
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Not found',
+            }, status=404)
+
+        # check if it is an instance of HttpResponse
+        if hasattr(response, 'status_code'):
+            status_code = response.status_code
+            if status_code > 399:
+                return JsonResponse({
+                        'status': 'error',
+                        'error': response.content,
+                    },
+                    status=status_code
+                )
+
+
+            return response
+
+        return JsonResponse(response)
 
     return decorator(ajax)
