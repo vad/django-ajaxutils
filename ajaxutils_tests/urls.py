@@ -11,5 +11,5 @@ urlpatterns = patterns('ajaxutils_tests.views',
     url(r'^simple_get/$', ajax(require="GET")(simple)),
     url(r'^simple_bool_post/$', ajax(require_POST=True)(simple)),
     url(r'^simple_post/$', ajax(require="POST")(simple)),
-    url(r'^logged/$', 'logged'),
+    url(r'^logged/$', ajax(login_required=True)(simple)),
 )

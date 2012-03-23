@@ -14,8 +14,10 @@ from django.http import HttpResponse
 
 class JsonResponse(HttpResponse):
     """
-    HttpResponse descendant, which return response with ``application/json`` mimetype.
+    HttpResponse descendant, which return response with
+    ``application/json`` mimetype.
     """
+
     def __init__(self, data, mimetype='application/json', status=200):
         super(JsonResponse, self).__init__(
             content=json.dumps(data),
@@ -33,6 +35,7 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
     def my_ajax_view(request):
         return {'count': 42}
     """
+
     def ajax(f, request, *args, **kwargs):
         """ wrapper function """
         if login_required:
@@ -40,7 +43,7 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
                 return JsonResponse({
                     'status': 'error',
                     'error': 'Unauthorized',
-                }, status=401)
+                    }, status=401)
 
         # check request method
         method = None
@@ -54,11 +57,8 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
             return JsonResponse({
                 'status': 'error',
                 'error': 'Method not allowed',
-            }, status=405)
+                }, status=405)
 
-        response = f(request, *args, **kwargs)
-
-        return JsonResponse(response)
-
+        return JsonResponse(f(request, *args, **kwargs))
 
     return decorator(ajax)
