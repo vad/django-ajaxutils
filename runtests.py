@@ -47,7 +47,7 @@ if not settings.configured:
         )
 
 def runtests(*test_args):
-    from django.test.simple import run_tests
+    from django.test.simple import DjangoTestSuiteRunner
 
     if 'south' in settings.INSTALLED_APPS:
         from south.management.commands import patch_for_test_db_setup
@@ -62,7 +62,7 @@ def runtests(*test_args):
             interactive=True)
         sys.exit(0)
     else:
-        failures = run_tests(test_args)
+        failures = DjangoTestSuiteRunner().run_tests(test_args)
         sys.exit(failures)
 
 if __name__ == '__main__':
