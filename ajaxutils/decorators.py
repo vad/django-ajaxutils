@@ -64,6 +64,10 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
 
             return response
 
-        return JsonResponse(response)
+        status_code = 200
+        if isinstance(response, tuple):
+            response, status_code = response
+
+        return JsonResponse(response, status=status_code)
 
     return decorator(ajax)

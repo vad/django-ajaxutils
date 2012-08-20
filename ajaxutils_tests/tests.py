@@ -62,3 +62,9 @@ class TestAjaxDecorator(TestCase):
         self.assertEqual(response.status_code, 401)
 
         json.loads(response.content)
+
+    def test_custom_status_code(self):
+        response = self.client.get('/custom/712/')
+        self.assertEqual(response.status_code, 712)
+
+        json.loads(response.content)
