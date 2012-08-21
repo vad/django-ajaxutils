@@ -1,7 +1,7 @@
-import json
-
 from django.test import TestCase
 from django.contrib.auth.models import User
+
+from ajaxutils import json
 
 
 class TestAjaxDecorator(TestCase):
@@ -60,6 +60,12 @@ class TestAjaxDecorator(TestCase):
     def test_logged_failure(self):
         response = self.client.get('/logged/')
         self.assertEqual(response.status_code, 401)
+
+        json.loads(response.content)
+
+    def test_catch_http_404_exception(self):
+        response = self.client.get('/raise/404/')
+        self.assertEqual(response.status_code, 404)
 
         json.loads(response.content)
 

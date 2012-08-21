@@ -80,3 +80,75 @@ This will return a ``405: Method not allowed`` response with the following JSON 
     }
 
 You can of course set ``require_GET=True`` for GET requests.
+
+You can also use this alternative syntax:
+
+    @ajax(require="GET")
+    def my_cool_view(request):
+        return {
+            'hello': 'world!'
+        }
+
+
+Custom Status Codes
+-------------------
+What if you don't want to return an HTTP 200? Do you want to return a 404? Write::
+
+    from django.http import Http404
+
+    @ajax()
+    def my_cool_view(request):
+        raise Http404
+
+This returns::
+
+    {
+        'status': 'error',
+        'error': 'Not found',
+    }
+
+Or maybe a 400 - Bad Request::
+
+    from django.http import HttpResponseBadRequest
+
+    @ajax()
+    def my_cool_view(request):
+        return HttpResponseBadRequest('My error message')
+
+This returns::
+
+    {
+        'status': 'error',
+        'error': 'My error message',
+    }
+
+and the HTTP response has status code 400.
+
+Another syntax, more Flask-ish::
+
+    @ajax()
+    def my_cool_view(request):
+        return {
+            "i'm a": 'teapot'
+        }, 418
+
+
+From infinity import json
+-------------------------
+
+Tired of writing infinite import statements to choose the best json module? Let ajaxutils do it for you::
+
+    from ajaxutils import json
+
+At the moment, ajaxutils prefers simplejson over the stdlib json. No other json module is used. In the future we will probably provide support to ujson using a Django setting.
+
+Changelog
+=========
+
+v0.2
+----
+
+* Moved JsonResponse to ajaxutils.http
+* Added Custom Status Codes handling
+* Added documentation for @ajax(require=METHOD)
+* Added "from ajaxutils import json"

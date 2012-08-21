@@ -1,9 +1,6 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 from django.http import HttpResponse
+
+from ajaxutils import json
 
 
 def handler(obj):
