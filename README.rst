@@ -81,7 +81,7 @@ This will return a ``405: Method not allowed`` response with the following JSON 
 
 You can of course set ``require_GET=True`` for GET requests.
 
-You can also use this alternative syntax:
+You can also use this alternative syntax::
 
     @ajax(require="GET")
     def my_cool_view(request):
