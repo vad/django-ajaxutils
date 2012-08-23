@@ -83,7 +83,7 @@ You can of course set ``require_GET=True`` for GET requests.
 
 You can also use this alternative syntax::
 
-    @ajax(require="GET")
+    @ajax(methods=["GET", "POST"])
     def my_cool_view(request):
         return {
             'hello': 'world!'

@@ -74,3 +74,21 @@ class TestAjaxDecorator(TestCase):
         self.assertEqual(response.status_code, 712)
 
         json.loads(response.content)
+
+    def test_methods_argument_allows_given_methods(self):
+        response = self.client.get('/simple_get_and_post/')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/simple_get_and_post/')
+        self.assertEqual(response.status_code, 200)
+
+        json.loads(response.content)
+
+    def test_methods_argument_denies_blocked_methods(self):
+        response = self.client.delete('/simple_get_and_post/')
+        self.assertEqual(response.status_code, 405)
+
+        response = self.client.put('/simple_get_and_post/')
+        self.assertEqual(response.status_code, 405)
+
+        json.loads(response.content)

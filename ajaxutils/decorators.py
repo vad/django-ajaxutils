@@ -2,6 +2,7 @@
 syntactic sugar for Ajax requests in django
 """
 from functools import wraps
+import warnings
 
 from django.http import Http404
 
@@ -17,19 +18,25 @@ class ajax(object):
         return {'count': 42}
     """
     def __init__(self, login_required=False, require_GET=False,
-                 require_POST=False, require=None):
+                 require_POST=False, require=None, methods=None):
 
         self.login_required = login_required
 
         # check request method
         method = None
         if require_GET:
-            method = "GET"
+            methods = ["GET"]
         if require_POST:
-            method = "POST"
+            methods = ["POST"]
         if require:
-            method = require
-        self.method = method
+            warnings.warn(
+                "'require' argument will be removed. Use 'methods' instead",
+                PendingDeprecationWarning,
+            )
+            methods = [require.upper()]
+        if methods:
+            methods = [method.upper() for method in methods]
+        self.methods = methods
 
     def __call__(self, fn):
         @wraps(fn)
@@ -45,7 +52,7 @@ class ajax(object):
                         status=401
                     )
 
-            if self.method and self.method != request.method:
+            if self.methods and request.method not in self.methods:
                 return JsonResponse(
                     {
                         'status': 'error',
