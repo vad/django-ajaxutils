@@ -1,16 +1,14 @@
 """
 syntactic sugar for Ajax requests in django
 """
-
-from decorator import decorator
+from functools import wraps
 
 from django.http import Http404
 
 from .http import JsonResponse
 
 
-def ajax(login_required=False, require_GET=False, require_POST=False,
-         require=None):
+class ajax(object):
     """
     Usage:
 
@@ -18,15 +16,10 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
     def my_ajax_view(request):
         return {'count': 42}
     """
+    def __init__(self, login_required=False, require_GET=False,
+                 require_POST=False, require=None):
 
-    def ajax(f, request, *args, **kwargs):
-        """ wrapper function """
-        if login_required:
-            if not request.user.is_authenticated():
-                return JsonResponse({
-                    'status': 'error',
-                    'error': 'Unauthorized',
-                    }, status=401)
+        self.login_required = login_required
 
         # check request method
         method = None
@@ -36,38 +29,60 @@ def ajax(login_required=False, require_GET=False, require_POST=False,
             method = "POST"
         if require:
             method = require
-        if method and method != request.method:
-            return JsonResponse({
-                'status': 'error',
-                'error': 'Method not allowed',
-                }, status=405)
+        self.method = method
 
-        try:
-            response = f(request, *args, **kwargs)
-        except Http404:
-            return JsonResponse({
-                'status': 'error',
-                'error': 'Not found',
-            }, status=404)
+    def __call__(self, fn):
+        @wraps(fn)
+        def wrapper(request, *args, **kwargs):
+            """ wrapper function """
+            if self.login_required:
+                if not request.user.is_authenticated():
+                    return JsonResponse(
+                        {
+                            'status': 'error',
+                            'error': 'Unauthorized',
+                        },
+                        status=401
+                    )
 
-        # check if it is an instance of HttpResponse
-        if hasattr(response, 'status_code'):
-            status_code = response.status_code
-            if status_code > 399:
-                return JsonResponse({
+            if self.method and self.method != request.method:
+                return JsonResponse(
+                    {
                         'status': 'error',
-                        'error': response.content,
+                        'error': 'Method not allowed',
                     },
-                    status=status_code
+                    status=405
                 )
 
+            try:
+                response = fn(request, *args, **kwargs)
+            except Http404:
+                return JsonResponse(
+                    {
+                        'status': 'error',
+                        'error': 'Not found',
+                    },
+                    status=404
+                )
 
-            return response
+            # check if it is an instance of HttpResponse
+            if hasattr(response, 'status_code'):
+                status_code = response.status_code
+                if status_code > 399:
+                    return JsonResponse(
+                        {
+                            'status': 'error',
+                            'error': response.content,
+                        },
+                        status=status_code
+                    )
 
-        status_code = 200
-        if isinstance(response, tuple):
-            response, status_code = response
+                return response
 
-        return JsonResponse(response, status=status_code)
+            status_code = 200
+            if isinstance(response, tuple):
+                response, status_code = response
 
-    return decorator(ajax)
+            return JsonResponse(response, status=status_code)
+
+        return wrapper

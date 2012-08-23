@@ -7,7 +7,6 @@ except ImportError:
 
 install_requires = [
     'Django>=1.2',
-    'decorator>=3.3.2',
 ]
 
 tests_require = [
